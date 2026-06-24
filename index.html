@@ -711,7 +711,7 @@ function renderSoal(){
 
   const optionsHtml = soal.pilihan.map((opt, idx)=>{
     const letter = String.fromCharCode(65+idx);
-    const selected = state.jawabanSiswa[soal.id] === opt;
+    const selected = String(state.jawabanSiswa[soal.id]) === String(opt);
     return `<div class="option-item ${selected?'selected':''}" onclick="pilihJawaban('${soal.id}', ${idx})">
       <div class="option-letter">${letter}</div>
       <div class="option-text">${opt}</div>
@@ -727,8 +727,9 @@ function renderSoal(){
 }
 
 function pilihJawaban(soalId, idx){
-  const soal = state.soalList.find(s=>s.id===soalId);
-  state.jawabanSiswa[soalId] = soal.pilihan[idx];
+  const soal = state.soalList.find(s=>String(s.id)===String(soalId));
+  if(!soal){ console.error('Soal tidak ditemukan untuk id:', soalId); return; }
+  state.jawabanSiswa[soal.id] = soal.pilihan[idx];
   renderSoal(); // auto-save (in-memory) + re-render untuk highlight
 }
 
